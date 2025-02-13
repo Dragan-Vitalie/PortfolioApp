@@ -18,7 +18,7 @@ function AuthLayout() {
             src='/assets/images/side-tablet.jpg'
             alt='logo'
             className='hidden xl:block h-screen w-1/2 object-cover bg-no-repeat'
-            // style={{backgroundImage: 'linear-gradient(to right, red, transparent'}}
+            // style={{backgroundImage: 'linear-gradient(to right, red, transparent'}} 
           />
         </>
       )}

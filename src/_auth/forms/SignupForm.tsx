@@ -8,12 +8,17 @@ import { useToast } from "@/hooks/use-toast"
 import { useForm } from "react-hook-form"
 import { SignupValidation } from "@/lib/validation"
 import Loader from "@/components/ui/shared/Loader"
-import { Link } from "react-router-dom"
-import { createUserAccount } from "@/lib/appwrite/api"
+import { Link, useNavigate } from "react-router-dom"
+import { useCreateUserAccount, useSignInAccount } from "@/lib/react-query/queriesAndMutations"
+import { useUserContext } from '@/context/AuthContext';
 
 function SignupForm() {
-  const isLoading = false;
   const { toast } = useToast()
+  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const navigate = useNavigate();
+
+  const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount();
+  const { mutateAsync: signInAccount, isPending: isSigningIn } = useSignInAccount();
 
 
   // 1. Define your form.
@@ -28,19 +33,32 @@ function SignupForm() {
   })
   
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof SignupValidation>) {
+  async function onSubmit(user: z.infer<typeof SignupValidation>) {
     // create a new user
-    const newUser = await createUserAccount(values);
+    const newUser = await createUserAccount(user);
 
     if (!newUser) {
-      return toast({ title: 'Sign Up failed. Please try again.'})
+      return toast({ title: 'Sign up failed. Please try again.'})
     }
 
-    // const session = await signInAccount()
+    const session = await signInAccount({
+      email: user.email,
+      password: user.password,
+    })
 
+    if (!session) {
+      return toast({ title: 'Sign in failed. Please try again.'})
+    }
 
-    // console.log(newUser);
-    
+    const isLoggedIn = await checkAuthUser();
+
+    if(isLoggedIn) {
+      form.reset();
+
+      navigate('/')
+    } else {
+      return toast({ title: 'Sign up failed. Please try again.'})
+    }
   }
 
 
@@ -124,7 +142,7 @@ function SignupForm() {
           />
 
           <Button type="submit" className="shad-button_primary mt-4 mt:mt-4">
-            {isLoading ? (
+            {isCreatingAccount ? (
               <div className="flex-center gap-2">
                  <Loader /> Loading..
               </div>

@@ -4,7 +4,7 @@ import './globals.css';
 import SigninForm from './_auth/forms/SigninForm';
 import SignupForm from './_auth/forms/SignupForm';
 import AuthLayout from './_auth/AuthLayout';
-import RouteLayout from './_route/RouteLayout';
+import RootLayout from './_route/RootLayout';
 import { Home } from './_route/pages';
 import { Toaster } from "@/components/ui/toaster"
 
@@ -22,7 +22,7 @@ const App = () => {
 
 
         {/* private routes */}
-        <Route element={<RouteLayout />}>
+        <Route element={<RootLayout />}>
           <Route index element={<Home />} />
         </Route>
       </Routes>

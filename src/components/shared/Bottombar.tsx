@@ -9,10 +9,6 @@ function Bottombar() {
       {bottombarLinks.map((link) => {
         const isActive = pathname === link.route;
         return (
-          // <li 
-          //   key={link.label}
-          //   className={`bottombar-link group ${ isActive && 'bg-primary-500'}`}
-          // >
             <Link 
               to={link.route} 
               key={link.label}
@@ -29,7 +25,6 @@ function Bottombar() {
                 {link.label}
               </p>
             </Link>
-          // </li>
         )
       })}
     </section>
